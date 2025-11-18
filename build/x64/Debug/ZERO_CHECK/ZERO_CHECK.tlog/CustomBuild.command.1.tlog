@@ -1,0 +1,10 @@
+^C:\USERS\ARDA\CPP-THREADPOOL\BUILD\CMAKEFILES\6122B8094E3576047CB686AA73D494B3\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/ARDA/cpp-threadpool -BC:/Users/ARDA/cpp-threadpool/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/ARDA/cpp-threadpool/build/cpp_threadpool.slnx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
