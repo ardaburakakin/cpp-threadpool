@@ -1,36 +1,54 @@
 # 🧵 C++ Multithreaded Thread Pool  
-Modern C++ (C++17) ile yazılmış, hafif, temiz ve genişletilebilir bir **çok iş parçacıklı (multithreaded) thread pool** yapısı.
+Modern C++17 ile yazılmış, hafif, verimli ve genişletilebilir bir **multithreaded thread pool** yapısı.
+
+<p align="left">
+  <img src="https://img.shields.io/badge/C++-17-blue.svg">
+  <img src="https://img.shields.io/badge/CMake-Build System-informational">
+  <img src="https://github.com/ardaburakakin/cpp-threadpool/actions/workflows/build.yml/badge.svg">
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-green">
+</p>
 
 Bu proje;
-✔ Modern C++ standardı  
-✔ std::thread, std::mutex, std::condition_variable  
-✔ Thread-safe queue  
-✔ Packaged task + future  
-✔ Asenkron görev yürütme (async task scheduling)  
-✔ RAII tabanlı temiz kapanış  
-gibi konularda yetkinliği göstermek için hazırlanmıştır.
+
+✔ Modern C++ concurrency  
+✔ std::thread, std::mutex, condition_variable  
+✔ Thread-safe message queue  
+✔ std::future + packaged_task  
+✔ Clean API design  
+✔ RAII tabanlı otomatik thread yönetimi  
+
+gibi alanlarda profesyonel C++ yetkinliğini göstermek için hazırlanmıştır.
 
 ---
 
 ## 🚀 Özellikler
 
-- **Asenkron görev yürütme:**  
-  Fonksiyonları thread pool’a gönder, sonuçları `std::future` ile al.
+- **Asenkron görev yürütme (async task scheduling)**  
+- **Thread-safe iş kuyruğu (producer-consumer model)**  
+- **Otomatik thread yaşam döngüsü yönetimi (RAII)**  
+- **Temiz API tasarımı (`pool.submit(...)`)**  
+- **Kolay genişletilebilir mimari**
 
-- **Thread-safe iş kuyruğu:**  
-  Üretici-tüketici (producer/consumer) modeli uygulanmıştır.
+---
 
-- **Otomatik thread yönetimi:**  
-  Havuz oluşturulur oluşturulmaz thread’ler başlar; program kapanırken temiz şekilde durur.
+## 📌 Örnek Kullanım
 
-- **Modern C++ tasarımı:**  
-  `std::invoke_result`, `std::packaged_task`, `std::function`, `move semantics`
+```cpp
+ThreadPool pool(4);
 
-- **Kolay kullanımlı API:**
-  ```cpp
-  pool.submit([] { return 42; });
+auto result = pool.submit([] {
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    return 42;
+});
 
-📂 Proje Yapısı 
+std::cout << "Sonuç: " << result.get() << std::endl;
+```
+
+---
+
+## 📂 Proje Yapısı
+
+```
 cpp-threadpool/
 │
 ├── src/
@@ -40,62 +58,65 @@ cpp-threadpool/
 │   └── main.cpp
 │
 ├── CMakeLists.txt
-└── README.md
+├── README.md
+├── LICENSE
+└── CONTRIBUTING.md
+```
 
-🛠 Kurulum ve Çalıştırma
-1. Build dizini oluştur
-   cmake -S . -B build
-2. Derle
-   cmake --build build --config Debug
-3. Çalıştır
-   ./build/Debug/cpp_threadpool.exe
+---
 
-📌 Örnek Kullanım
-ThreadPool pool(4);
+## 🛠 Derleme Talimatı
 
-auto result = pool.submit([] {
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    return 42;
-});
+### 1) Build klasörü oluştur
+```bash
+cmake -S . -B build
+```
 
-std::cout << "Sonuç: " << result.get() << std::endl;
+### 2) Derle
+```bash
+cmake --build build --config Debug
+```
 
-🧠 Teknik Mimari
-🔸 1. ThreadSafeQueue
+### 3) Çalıştır
+```bash
+./build/Debug/cpp_threadpool.exe
+```
 
-Thread-safe bir std::queue sarmalayıcıdır.
-Mutex + condition variable ile senkronize edilir.
+---
 
-🔸 2. ThreadPool
+## 🧠 Teknik Mimari
 
-Belirtilen sayıda worker thread oluşturur
+### 1️⃣ ThreadSafeQueue  
+- Mutex + condition variable ile korunur  
+- Push ve pop işlemleri bloklanır  
+- Üretici–tüketici (producer-consumer) modeli uygulanır  
 
-Görevleri kuyruğa alır
+### 2️⃣ ThreadPool  
+- Başlatılırken N adet worker thread oluşturur  
+- submit() → packaged_task → future mekanizması  
+- Boş task = thread kapanma sinyali  
 
-Her thread worker_loop() içinde bekler
+### 3️⃣ Task Scheduling  
+- Görevler “lambda”, “callable obj”, “free function”… olabilir  
+- Sonuçlar future ile alınır  
 
-Boş (nullptr) bir iş gelince thread kapanır
+---
 
-🔸 3. Task Scheduling
+## 📈 Yol Haritası
 
-Görevler std::packaged_task olarak tutulur;
-sonuçlar std::future üzerinden alınır.
+- [ ] Öncelikli iş kuyruğu (priority queue)  
+- [ ] Work stealing (çok çekirdek performansı)  
+- [ ] Lock-free queue  
+- [ ] Benchmark sonuçları  
+- [ ] Linux/macOS CI ekleme  
 
-🎯 Öğrenilen / Gösterilen Yetkinlikler
+---
 
-Çok iş parçacıklı programlama (Multithreading)
+## 📜 Lisans  
+MIT lisansı (LICENSE dosyasında).
 
-Üretici–tüketici modeli
+---
 
-Senkronizasyon primitifleri
-(std::mutex, std::condition_variable)
-
-C++17 template metaprogramming (invoke_result)
-
-Asenkron görev yönetimi
-
-Thread-safe veri yapıları
-
-Modern C++ API tasarımı
-
-CMake proje organizasyonu
+## 👨‍💻 Geliştirici  
+**Arda Burak Akın**  
+C++ • Multithreading • System Programming • Low-level Design  
