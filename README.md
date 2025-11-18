@@ -29,9 +29,8 @@ gibi konularda yetkinliği göstermek için hazırlanmıştır.
 - **Kolay kullanımlı API:**
   ```cpp
   pool.submit([] { return 42; });
-📂 Proje Yapısı
-css
-Kodu kopyala
+
+📂 Proje Yapısı 
 cpp-threadpool/
 │
 ├── src/
@@ -42,22 +41,16 @@ cpp-threadpool/
 │
 ├── CMakeLists.txt
 └── README.md
+
 🛠 Kurulum ve Çalıştırma
 1. Build dizini oluştur
-bash
-Kodu kopyala
-cmake -S . -B build
+   cmake -S . -B build
 2. Derle
-bash
-Kodu kopyala
-cmake --build build --config Debug
+   cmake --build build --config Debug
 3. Çalıştır
-bash
-Kodu kopyala
-./build/Debug/cpp_threadpool.exe
+   ./build/Debug/cpp_threadpool.exe
+
 📌 Örnek Kullanım
-cpp
-Kodu kopyala
 ThreadPool pool(4);
 
 auto result = pool.submit([] {
@@ -66,12 +59,15 @@ auto result = pool.submit([] {
 });
 
 std::cout << "Sonuç: " << result.get() << std::endl;
+
 🧠 Teknik Mimari
 🔸 1. ThreadSafeQueue
+
 Thread-safe bir std::queue sarmalayıcıdır.
 Mutex + condition variable ile senkronize edilir.
 
 🔸 2. ThreadPool
+
 Belirtilen sayıda worker thread oluşturur
 
 Görevleri kuyruğa alır
@@ -81,10 +77,12 @@ Her thread worker_loop() içinde bekler
 Boş (nullptr) bir iş gelince thread kapanır
 
 🔸 3. Task Scheduling
+
 Görevler std::packaged_task olarak tutulur;
 sonuçlar std::future üzerinden alınır.
 
 🎯 Öğrenilen / Gösterilen Yetkinlikler
+
 Çok iş parçacıklı programlama (Multithreading)
 
 Üretici–tüketici modeli
@@ -101,21 +99,3 @@ Thread-safe veri yapıları
 Modern C++ API tasarımı
 
 CMake proje organizasyonu
-
-🔮 Geliştirme Yol Haritası
- Öncelikli iş kuyruğu (priority queue)
-
- Work-stealing (yük dengeleme)
-
- Lock-free queue
-
- Performans benchmark’ları
-
- Thread affinity ayarları
-
-📜 Lisans
-Bu proje MIT Lisansı ile sunulmuştur.
-
-👨‍💻 Geliştirici
-Arda Burak Akın
-C++ • Sistem Programlama • Concurrency • Performans Odaklı Geliştirme
